@@ -3,9 +3,9 @@
             [tic-tac-toe.player-type :as player-type]
             [tic-tac-toe.human :as human]
             [tic-tac-toe.random-computer :as random-computer]
-            [tic-tac-toe.unbeatable-computer :as unbeatable-computer]
             [tic-tac-toe.input :as input]
-            [tic-tac-toe.output :as output]))
+            [tic-tac-toe.output :as output]
+            [clj-http.client :as client]))
 
 (def play-again-selection 1)
 
@@ -35,11 +35,15 @@
       (get players player-x)
       (get players player-o))))
 
+(defn- api-call [board-state]
+  (let [result (client/post "https://xast1bug7h.execute-api.us-east-1.amazonaws.com/ttt" {:form-params {"boardState" (str board-state)} :content-type :json} )]
+    (read-string (get result :body))))
+
 (defn- player-move [board-state player]
   (case player
     :human (human/choose-space)
     :random-computer (random-computer/choose-space board-state)
-    :unbeatable-computer (unbeatable-computer/choose-space board-state)))
+    :unbeatable-computer (api-call board-state)))
 
 (defn single-turn [board-state players]
   (let [player (current-player board-state players)]

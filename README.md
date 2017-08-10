@@ -8,6 +8,23 @@ There are three types of players, and a game can be played by any combination of
 2. Simple Computer
 3. Expert Computer
 
+The unbeatable computer
+player uses [the API I built using an AWS
+Lambda](https://github.com/pelensky/ttt_network_player).
+
+#### Prerequisites 
+1. Install [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+2. Install [Homebrew](https://brew.sh/) by running `$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+3. Install [Clojure](https://clojure.org/guides/getting_started) by running `$ brew install clojure`
+4. Install [Leiningen](https://leiningen.org/) by running `$ brew install leiningen`
+
+#### Running instructions
+1. Clone the repository by clicking on the green "Clone or Download" button
+2. Select Download Zip
+3. Double click the zip file to unzip it
+4. In terminal, CD into the repository
+5. Run the app by running `$ lein run`
+
 #### The Rules
 
 The rules of tic-tac-toe are as follows:
