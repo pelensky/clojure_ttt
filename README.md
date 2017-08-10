@@ -23,7 +23,7 @@ Lambda](https://github.com/pelensky/ttt_network_player).
 2. Select Download Zip
 3. Double click the zip file to unzip it
 4. In terminal, CD into the repository
-5. Run the app by running `$ lein run`
+5. Run the app with `$ lein run`
 
 #### The Rules
 
