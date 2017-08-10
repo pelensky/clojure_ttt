@@ -51,7 +51,7 @@
       (ttt-board/place-marker (player-move board-state player) board-state)))
 
 (defn game-runner [board-state players]
-  ;(output/clear-screen)
+  (output/clear-screen)
   (output/print-message (output/take-turn board-state))
   (output/print-message (output/format-board board-state))
   (let [updated-board (single-turn board-state players)]
