@@ -9,6 +9,7 @@
             [cemerick.bandalore :as sqs]))
 
 (def client (sqs/create-client (get (System/getenv) "AWS_ID") (get (System/getenv) "AWS_SECRET_KEY")))
+(def uuid (str(java.util.UUID/randomUUID)))
 (def play-again-selection 1)
 (def player-x 0)
 (def player-o 1)
