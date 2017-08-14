@@ -8,9 +8,7 @@
             [clj-http.client :as client]
             [cemerick.bandalore :as sqs]))
 
-(def aws-id (get (System/getenv) "AWS_ID"))
-(def aws-secret-key (get (System/getenv) "AWS_SECRET_KEY"))
-(def client (sqs/create-client aws-id aws-secret-key))
+(def client (sqs/create-client (get (System/getenv) "AWS_ID") (get (System/getenv) "AWS_SECRET_KEY")))
 (def play-again-selection 1)
 (def player-x 0)
 (def player-o 1)
@@ -67,6 +65,6 @@
       (recur updated-players))))
 
 (defn play []
-  ;(output/clear-screen)
+  (output/clear-screen)
   (output/print-message (output/welcome))
   (select-players []))
