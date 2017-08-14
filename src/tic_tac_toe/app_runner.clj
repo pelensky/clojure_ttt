@@ -5,11 +5,9 @@
             [tic-tac-toe.random-computer :as random-computer]
             [tic-tac-toe.input :as input]
             [tic-tac-toe.output :as output]
-            [clj-http.client :as client]
-            [cemerick.bandalore :as sqs]))
+            [tic-tac-toe.queue :as queue]
+            [clj-http.client :as client]))
 
-(def client (sqs/create-client (get (System/getenv) "AWS_ID") (get (System/getenv) "AWS_SECRET_KEY")))
-(def uuid (str(java.util.UUID/randomUUID)))
 (def play-again-selection 1)
 (def player-x 0)
 (def player-o 1)
@@ -66,6 +64,7 @@
       (recur updated-players))))
 
 (defn play []
+  (queue/send-uuid-to-queue)
   (output/clear-screen)
   (output/print-message (output/welcome))
   (select-players []))
