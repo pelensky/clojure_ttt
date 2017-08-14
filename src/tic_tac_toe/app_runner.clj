@@ -5,14 +5,15 @@
             [tic-tac-toe.random-computer :as random-computer]
             [tic-tac-toe.input :as input]
             [tic-tac-toe.output :as output]
-            [clj-http.client :as client]))
+            [clj-http.client :as client]
+            [cemerick.bandalore :as sqs]))
 
+(def aws-id (get (System/getenv) "AWS_ID"))
+(def aws-secret-key (get (System/getenv) "AWS_SECRET_KEY"))
+(def client (sqs/create-client aws-id aws-secret-key))
 (def play-again-selection 1)
-
 (def player-x 0)
-
 (def player-o 1)
-
 (def max-players 2)
 
 (declare play)
@@ -59,7 +60,6 @@
       (recur updated-board players))))
 
 (defn select-players [players]
-  (output/clear-screen)
   (output/print-message (output/player-type (if (empty? players) "X" "O")))
   (let [updated-players (player-type/select-players players (player-type/select-player (input/get-number)))]
     (if (= max-players (count updated-players ))
@@ -67,6 +67,6 @@
       (recur updated-players))))
 
 (defn play []
-  (output/clear-screen)
+  ;(output/clear-screen)
   (output/print-message (output/welcome))
   (select-players []))
