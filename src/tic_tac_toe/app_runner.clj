@@ -56,15 +56,16 @@
       (end-of-game updated-board)
       (recur updated-board players))))
 
-(defn select-players [players]
+(defn select-players [players uuid]
   (output/print-message (output/player-type (if (empty? players) "X" "O")))
   (let [updated-players (player-type/select-players players (player-type/select-player (input/get-number)))]
     (if (= max-players (count updated-players ))
-      (game-runner {:size 3 :board []} updated-players)
-      (recur updated-players))))
+      (game-runner {:uuid uuid :size 3 :board []} updated-players)
+      (recur updated-players uuid))))
 
 (defn play []
-  (queue/send-uuid-to-queue)
+  (let [uuid (queue/create-uuid)]
+  (queue/send-uuid-to-queue uuid)
   (output/clear-screen)
   (output/print-message (output/welcome))
-  (select-players []))
+  (select-players [] uuid)))

@@ -35,9 +35,9 @@
                                               (play)))))
 
           (it "single turn returns board"
-              (should= {:size 3 :board [3]}
+              (should= {:uuid "uuid" :size 3 :board [3]}
                        (with-in-str "A2"
-                         (single-turn {:size 3 :board []} [:human :human]))))
+                         (single-turn {:uuid "uuid" :size 3 :board []} [:human :human]))))
 
           (it "finds the current player type"
               (should= :human
