@@ -6,6 +6,7 @@
             [tic-tac-toe.input :as input]
             [tic-tac-toe.output :as output]
             [tic-tac-toe.queue :as queue]
+            [tic-tac-toe.notifications :as notifications]
             [clj-http.client :as client]))
 
 (def selection-1 1)
@@ -46,6 +47,7 @@
     :unbeatable-computer (api-call board-state)))
 
 (defn single-turn [board-state players]
+  (notifications/send-move board-state)
   (let [player (current-player board-state players)]
       (ttt-board/place-marker (player-move board-state player) board-state)))
 
@@ -72,6 +74,7 @@
 (defn play []
   (let [uuid (queue/create-uuid)]
   (queue/send-uuid-to-queue uuid)
+  (notifications/create-game uuid)
   (select-players [] uuid)))
 
 (defn select-player-or-spectator []

@@ -34,11 +34,6 @@
                               (with-out-str (with-in-str "1\n1\n1\na1\nc1\nb2\nc2\na3\nc3\n2"
                                               (start)))))
 
-          (it "single turn returns board"
-              (should= {:uuid "uuid" :size 3 :board [3]}
-                       (with-in-str "A2"
-                         (single-turn {:uuid "uuid" :size 3 :board []} [:human :human]))))
-
           (it "finds the current player type"
               (should= :human
                        (current-player {:size 3 :board []} [:human :computer])))
