@@ -1,12 +1,18 @@
 (ns tic-tac-toe.queue
-  (:require [cemerick.bandalore :as sqs]))
+  (require [amazonica.aws.sqs :as aws]))
 
-(def client (sqs/create-client (get (System/getenv) "AWS_ID") (get (System/getenv) "AWS_SECRET_KEY")))
-(def queue (sqs/create-queue client "InProgressGames"))
+(def queue (aws/find-queue "InProgressGames"))
 
 (defn create-uuid []
   (str (java.util.UUID/randomUUID)))
 
 (defn send-uuid-to-queue [uuid]
-  (sqs/send client queue uuid))
+  (aws/send-message queue uuid))
+
+(defn get-game-uuids []
+  (aws/receive-message :queue-url queue
+                       :wait-time-seconds 6
+                       :max-number-of-messages 10
+                       :delete false
+                       :attribute-names ["All"]))
 
