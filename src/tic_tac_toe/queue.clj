@@ -1,9 +1,6 @@
 (ns tic-tac-toe.queue
   (require [amazonica.aws.sqs :as aws]))
 
-(defn- get-environment-variable [name]
-  (str (get (System/getenv) name)))
-
 (def queue (aws/find-queue "InProgressGames"))
 
 (defn create-uuid []
@@ -19,5 +16,6 @@
                        :delete false
                        :attribute-names ["All"]))
 
-(defn get-game-ids []
-  (map #(get % :body) (get (tic-tac-toe.queue/get-messages) :messages)))
+(defn get-game-ids [all-messages]
+  (let [messages (get all-messages :messages)]
+  (set (map #(get % :body) messages))))
