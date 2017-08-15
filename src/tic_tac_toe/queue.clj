@@ -12,11 +12,12 @@
 (defn send-uuid-to-queue [uuid]
   (aws/send-message queue uuid))
 
-(defn get-game-uuids []
-  (aws/receive-message 
-                     :queue-url queue
+(defn get-messages []
+  (aws/receive-message :queue-url queue
                        :wait-time-seconds 6
                        :max-number-of-messages 10
                        :delete false
                        :attribute-names ["All"]))
 
+(defn get-game-ids []
+  (map #(get % :body) (get (tic-tac-toe.queue/get-messages) :messages)))
