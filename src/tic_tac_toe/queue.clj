@@ -6,7 +6,7 @@
 
 (def cred {:access-key (get-environment-variable "AWS_ACCESS_KEY_ID")
            :secret-key (get-environment-variable "AWS_SECRET_KEY")
-           :endpoint (get-environment-variable "AWS_REGION_ENV_VAR")})
+           :endpoint (get-environment-variable "AWS_REGION")})
 
 (def queue (aws/find-queue "InProgressGames"))
 
