@@ -65,17 +65,21 @@
       (game-runner {:uuid uuid :size 3 :board []} updated-players)
       (recur updated-players uuid))))
 
-(defn select-player-or-spectator []
-  (output/print-message (output/player-or-spectator))
-  (let [choice (input/get-number two)])
-  )
+(defn spectate [])
 
 (defn play []
   (let [uuid (queue/create-uuid)]
   (queue/send-uuid-to-queue uuid)
   (select-players [] uuid)))
 
+(defn select-player-or-spectator []
+  (output/print-message (output/player-or-spectator))
+  (let [choice (input/get-number two)]
+  (if (= 1 choice)
+    (play)
+    (spectate))))
+
 (defn start []
   (output/clear-screen)
   (output/print-message (output/welcome))
-  )
+  (select-player-or-spectator))

@@ -5,7 +5,7 @@
   "Tic Tac Toe")
 
 (defn player-or-spectator []
-  "Select your role\n1)Player\n2)Spectator")
+  "Select your role\n1) Player\n2) Spectator")
 
 (defn take-turn [board-state]
   (str (if (even? (count (ttt-board/get-board board-state))) "X" "O") ", take your turn"))

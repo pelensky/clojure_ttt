@@ -4,7 +4,7 @@
 
 (describe "Output"
           (it "Asks if the user is a player or spectator"
-              (should-contain "Select your role\n1)Player\n2)Spectator"
+              (should-contain "Select your role\n1) Player\n2) Spectator"
                 (with-out-str (print-message (player-or-spectator)))))
 
           (it "Welcomes user"
