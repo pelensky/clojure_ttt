@@ -3,6 +3,10 @@
             [tic-tac-toe.output :refer :all]))
 
 (describe "Output"
+          (it "Asks if the user is a player or spectator"
+              (should-contain "Select your role\n1)Player\n2)Spectator"
+                (with-out-str (print-message (player-or-spectator)))))
+
           (it "Welcomes user"
               (should-contain "Tic Tac Toe"
                               (with-out-str (print-message (welcome)))))

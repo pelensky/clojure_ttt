@@ -7,12 +7,12 @@
           (it "gets one or two"
               (should= 1
                        (with-in-str "1"
-                         (get-number))))
+                         (get-number [1 2]))))
 
           (it "does not accept a letter"
               (should= 1
                        (with-in-str "dan\n1"
-                         (get-number))))
+                         (get-number [1 2]))))
 
           (it "converts input to integer"
               (should= 0

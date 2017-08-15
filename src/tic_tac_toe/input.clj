@@ -6,8 +6,6 @@
    "A2" 3 "B2" 4 "C2" 5
    "A3" 6 "B3" 7 "C3" 8})
 
-(def valid-options [1 2 3])
-
 (defn- convert-coordinate-to-space []
   (get conversions
        (string/upper-case
@@ -26,11 +24,11 @@
         (catch Exception e))
       (recur)))
 
-(defn- valid-selection [selection]
+(defn- valid-selection [selection valid-options]
   (some (partial = selection) valid-options))
 
-(defn get-number []
+(defn get-number [valid-options]
   (let [selection (validate-integer)]
-    (if (valid-selection selection)
+    (if (valid-selection selection valid-options)
       selection
-      (recur))))
+      (recur valid-options))))

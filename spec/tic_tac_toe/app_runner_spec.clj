@@ -4,11 +4,6 @@
 
 (describe "App Runner"
 
-          (it "Prints Welcome"
-              (should-contain "Tic Tac Toe"
-                              (with-out-str (with-in-str "1\n1\na1\nb2\na2\na3\nc1\nb1\nb3\nc2\nc3\n2"
-                                              (play)))))
-
           (it "Prints players turn"
               (should-contain "X, take your turn"
                               (with-out-str (with-in-str "1\n1\na1\nb2\na2\na3\nc1\nb1\nb3\nc2\nc3\n2"

@@ -12,6 +12,8 @@
 (def player-x 0)
 (def player-o 1)
 (def max-players 2)
+(def two [1 2])
+(def three [1 2 3])
 
 (declare play)
 
@@ -25,7 +27,7 @@
   (output/print-message (output/game-over board-state))
   (output/print-message (output/format-board board-state))
   (output/print-message (output/play-again))
-  (play-again (input/get-number)))
+  (play-again (input/get-number two)))
 
 (defn current-player [board-state players]
   (let [board (ttt-board/get-board board-state)]
@@ -58,14 +60,22 @@
 
 (defn select-players [players uuid]
   (output/print-message (output/player-type (if (empty? players) "X" "O")))
-  (let [updated-players (player-type/select-players players (player-type/select-player (input/get-number)))]
+  (let [updated-players (player-type/select-players players (player-type/select-player (input/get-number three)))]
     (if (= max-players (count updated-players ))
       (game-runner {:uuid uuid :size 3 :board []} updated-players)
       (recur updated-players uuid))))
 
+(defn select-player-or-spectator []
+  (output/print-message (output/player-or-spectator))
+  (let [choice (input/get-number two)])
+  )
+
 (defn play []
   (let [uuid (queue/create-uuid)]
   (queue/send-uuid-to-queue uuid)
+  (select-players [] uuid)))
+
+(defn start []
   (output/clear-screen)
   (output/print-message (output/welcome))
-  (select-players [] uuid)))
+  )
