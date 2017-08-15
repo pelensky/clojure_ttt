@@ -7,6 +7,10 @@
 (defn player-or-spectator []
   "Select your role\n1) Player\n2) Spectator")
 
+(defn number-of-games [games]
+  (let [number (count games)]
+    (str "There are " number " games in progress.\nSelect a game from 1 to " number)))
+
 (defn take-turn [board-state]
   (str (if (even? (count (ttt-board/get-board board-state))) "X" "O") ", take your turn"))
 

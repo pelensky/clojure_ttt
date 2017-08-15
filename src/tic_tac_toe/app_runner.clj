@@ -8,7 +8,7 @@
             [tic-tac-toe.queue :as queue]
             [clj-http.client :as client]))
 
-(def play-again-selection 1)
+(def selection-1 1)
 (def player-x 0)
 (def player-o 1)
 (def max-players 2)
@@ -18,7 +18,7 @@
 (declare play)
 
 (defn play-again [selection]
-  (if (= selection play-again-selection)
+  (if (= selection selection-1)
     (play)
     (output/print-message (output/exiting))))
 
@@ -65,7 +65,9 @@
       (game-runner {:uuid uuid :size 3 :board []} updated-players)
       (recur updated-players uuid))))
 
-(defn spectate [])
+(defn spectate []
+  (let [games (queue/get-messages)]
+    (output/print-message (output/number-of-games games))))
 
 (defn play []
   (let [uuid (queue/create-uuid)]
@@ -75,7 +77,7 @@
 (defn select-player-or-spectator []
   (output/print-message (output/player-or-spectator))
   (let [choice (input/get-number two)]
-  (if (= 1 choice)
+  (if (= selection-1 choice)
     (play)
     (spectate))))
 

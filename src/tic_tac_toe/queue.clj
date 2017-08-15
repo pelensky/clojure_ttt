@@ -10,12 +10,12 @@
   (aws/send-message queue uuid))
 
 (defn get-messages []
-  (aws/receive-message :queue-url queue
-                       :wait-time-seconds 6
-                       :max-number-of-messages 10
-                       :delete false
-                       :attribute-names ["All"]))
+  (get
+    (aws/receive-message :queue-url queue
+                         :wait-time-seconds 6
+                         :max-number-of-messages 10
+                         :delete false
+                         :attribute-names ["All"]) :messages))
 
-(defn get-game-ids [all-messages]
-  (let [messages (get all-messages :messages)]
-  (set (map #(get % :body) messages))))
+(defn get-game-ids [messages]
+    (set (map #(get % :body) messages)) )
