@@ -10,9 +10,8 @@
 (defn send-move [board-state]
   (let [id (get board-state :uuid)
         arn (str "arn:aws:sns:" region ":" account-number ":" id)]
-    (println arn)
     (publish :topic-arn arn
-             :subject (str board-state)
+             :subject id
              :message (str board-state)
              :message-attributes {"attr" "value"})))
 

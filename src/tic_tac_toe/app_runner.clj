@@ -5,6 +5,7 @@
             [tic-tac-toe.random-computer :as random-computer]
             [tic-tac-toe.input :as input]
             [tic-tac-toe.output :as output]
+            [tic-tac-toe.spectator :as spectator]
             [tic-tac-toe.queue :as queue]
             [tic-tac-toe.notifications :as notifications]
             [clj-http.client :as client]))
@@ -16,11 +17,11 @@
 (def two [1 2])
 (def three [1 2 3])
 
-(declare play)
+(declare start)
 
 (defn play-again [selection]
   (if (= selection selection-1)
-    (play)
+    (start)
     (output/print-message (output/exiting))))
 
 (defn end-of-game [board-state]
@@ -49,7 +50,7 @@
 (defn single-turn [board-state players]
   (notifications/send-move board-state)
   (let [player (current-player board-state players)]
-      (ttt-board/place-marker (player-move board-state player) board-state)))
+    (ttt-board/place-marker (player-move board-state player) board-state)))
 
 (defn game-runner [board-state players]
   (output/clear-screen)
@@ -68,27 +69,32 @@
       (recur updated-players uuid))))
 
 (defn spectate []
-  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue))]
-    (println games)
-    (output/print-message (output/number-of-games games))
-    (let [choice (input/get-number (range 1 (inc (count games))))
-          game (get games (dec choice))]
-      (println game)
-      (println  (notifications/subscribe-to-game game))
-      )))
+  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue))
+        number-of-games (spectator/count-games games)]
+    (println number-of-games)
+    (cond
+      (= 0 number-of-games) (do (output/print-message (output/no-games)) (Thread/sleep 2000) (start))
+      (= 1 number-of-games) (notifications/subscribe-to-game (get games 0) )
+      :else
+      ((output/print-message (output/number-of-games games))
+       (let [choice (input/get-number (range 1 (inc (count games))))
+             game (get games (dec choice))]
+         (println game)
+         (println  (notifications/subscribe-to-game game))
+         )))))
 
 (defn play []
   (let [uuid (queue/create-uuid)]
-  (queue/send-uuid-to-queue uuid)
-  (notifications/create-game uuid)
-  (select-players [] uuid)))
+    (queue/send-uuid-to-queue uuid)
+    (notifications/create-game uuid)
+    (select-players [] uuid)))
 
 (defn select-player-or-spectator []
   (output/print-message (output/player-or-spectator))
   (let [choice (input/get-number two)]
-  (if (= selection-1 choice)
-    (play)
-    (spectate))))
+    (if (= selection-1 choice)
+      (play)
+      (spectate))))
 
 (defn start []
   (output/clear-screen)

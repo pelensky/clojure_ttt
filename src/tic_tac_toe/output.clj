@@ -11,6 +11,9 @@
   (let [number (count games)]
     (str "There are " number " games in progress.\nSelect a game from 1 to " number)))
 
+(defn no-games []
+  "There are no games to watch. Please try again later.")
+
 (defn take-turn [board-state]
   (str (if (even? (count (ttt-board/get-board board-state))) "X" "O") ", take your turn"))
 
