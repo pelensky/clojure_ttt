@@ -68,7 +68,7 @@
       (recur updated-players uuid))))
 
 (defn spectate []
-  (let [games (queue/get-messages)]
+  (let [games (queue/get-messages queue/games-queue)]
     (output/print-message (output/number-of-games games))))
 
 (defn play []

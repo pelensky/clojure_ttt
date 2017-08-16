@@ -1,15 +1,15 @@
 (ns tic-tac-toe.queue
   (require [amazonica.aws.sqs :as aws]))
 
-(def queue (aws/find-queue "InProgressGames"))
+(def games-queue (aws/find-queue "InProgressGames"))
 
 (defn create-uuid []
   (str (java.util.UUID/randomUUID)))
 
 (defn send-uuid-to-queue [uuid]
-  (aws/send-message queue uuid))
+  (aws/send-message games-queue uuid))
 
-(defn get-messages []
+(defn get-messages [queue]
   (get
     (aws/receive-message :queue-url queue
                          :wait-time-seconds 6
