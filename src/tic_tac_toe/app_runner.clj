@@ -68,8 +68,14 @@
       (recur updated-players uuid))))
 
 (defn spectate []
-  (let [games (queue/get-messages queue/games-queue)]
-    (output/print-message (output/number-of-games games))))
+  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue))]
+    (println games)
+    (output/print-message (output/number-of-games games))
+    (let [choice (input/get-number (range 1 (inc (count games))))
+          game (get games (dec choice))]
+      (println game)
+      (println  (notifications/subscribe-to-game game))
+      )))
 
 (defn play []
   (let [uuid (queue/create-uuid)]

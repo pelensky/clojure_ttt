@@ -2,6 +2,7 @@
   (require [amazonica.aws.sqs :as aws]))
 
 (def games-queue (aws/find-queue "InProgressGames"))
+(def watching-queue (aws/find-queue "WatchingGame"))
 
 (defn create-uuid []
   (str (java.util.UUID/randomUUID)))
@@ -15,7 +16,7 @@
                          :wait-time-seconds 6
                          :max-number-of-messages 10
                          :delete false
-                         :attribute-names ["All"]) :messages))
+                         :attribute-names ["All"])  :messages))
 
 (defn get-game-ids [messages]
-    (set (map #(get % :body) messages)) )
+  (vec (set (map #(get % :body) messages))))
