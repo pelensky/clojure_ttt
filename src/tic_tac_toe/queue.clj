@@ -9,6 +9,7 @@
   (str (java.util.UUID/randomUUID)))
 
 (defn send-uuid-to-queue [uuid]
+  (println (aws/list-queues))
   (aws/send-message games-queue uuid))
 
 (defn get-messages [queue delete?]

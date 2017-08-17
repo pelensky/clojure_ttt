@@ -3,15 +3,15 @@
 
 (def region (get (System/getenv) "AWS_REGION"))
 (def account-number (get (System/getenv) "AWS_ACCOUNT_ID"))
+(def topic "tic-tac-toe")
 
 (defn create-game [id]
   (create-topic :name id))
 
 (defn send-move [board-state]
-  (let [id (get board-state :uuid)
-        arn (str "arn:aws:sns:" region ":" account-number ":" id)]
+  (let [arn (str "arn:aws:sns:" region ":" account-number ":" topic)]
     (publish :topic-arn arn
-             :subject id
+             :subject topic
              :message (str board-state)
              :message-attributes {"attr" "value"})))
 
