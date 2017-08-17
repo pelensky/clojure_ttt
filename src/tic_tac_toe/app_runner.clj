@@ -25,6 +25,7 @@
     (output/print-message (output/exiting))))
 
 (defn end-of-game [board-state]
+  (notifications/send-move board-state)
   (output/clear-screen)
   (output/print-message (output/game-over board-state))
   (output/print-message (output/format-board board-state))
