@@ -69,37 +69,22 @@
       (recur updated-players uuid))))
 
 (defn- get-ongoing-game []
-  (let [moves (queue/get-messages queue/watching-queue false)]
-   (println moves)
-    (if (empty? moves)
-      (println "EMPTY")
-      (for [move moves]
-        (println move)))))
-
-(defn no-games []
-  (output/print-message (output/no-games))
-  (Thread/sleep 2000)
-  (start))
-
-(defn one-game [games]
-  (notifications/subscribe-to-game (get games 0))
-  (get-ongoing-game))
+  (let [games (queue/get-messages queue/watching-queue true)
+        moves (queue/get-game-states games)]
+    (println moves)
+    (doall  (for [move moves]
+      (output/print-message (output/format-board (read-string  move)))))
+    (recur) ))
 
 (defn multiple-games [games]
-  (output/print-message (output/number-of-games games))
-  (let [choice (input/get-number (range selection-1 (inc (count games))))]
-    (notifications/subscribe-to-game (get games (dec choice)))
-    (get-ongoing-game)))
+  (println
+    (for [game games]
+      (notifications/subscribe-to-game game)))
+  (get-ongoing-game))
 
 (defn- spectate []
-  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue false))
-        number-of-games (spectator/count-games games)]
-    (println games)
-    (cond
-      (= 0 number-of-games) (no-games)
-      (= 1 number-of-games) (one-game games)
-      :else
-      (multiple-games games))))
+  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue false))]
+    (multiple-games games)))
 
 (defn play []
   (let [uuid (queue/create-uuid)]
