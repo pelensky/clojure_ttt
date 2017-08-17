@@ -70,20 +70,19 @@
       (recur updated-players uuid))))
 
 (defn- get-ongoing-game []
-  (let [games (queue/get-messages queue/watching-queue true)
+  (let [games (queue/get-messages queue/watching-queue)
         moves (queue/get-game-states games)]
     (doall  (for [move moves]
               (output/print-message (output/format-board (read-string  move)))))
     (recur) ))
 
 (defn spectate []
-  (dorun
-    (notifications/subscribe-to-games))
+  (dorun (notifications/subscribe-to-games))
   (get-ongoing-game) )
 
 (defn play []
-  (let [uuid (queue/create-uuid)]
-    (select-players [] uuid)))
+  (let [game-uuid (queue/create-uuid)]
+    (select-players [] game-uuid)))
 
 (defn select-player-or-spectator []
   (output/print-message (output/player-or-spectator))

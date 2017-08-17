@@ -16,12 +16,12 @@
                  :ReceiveMessageWaitTimeSeconds 10}) ; sec)
 )
 
-  (defn get-messages [queue delete?]
+  (defn get-messages [queue]
     (get
       (aws/receive-message :queue-url queue
                            :wait-time-seconds 6
                            :max-number-of-messages 10
-                           :delete delete?
+                           :delete true
                            :attribute-names ["All"])  :messages))
 
   (defn get-game-states [messages]
