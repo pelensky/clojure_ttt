@@ -68,20 +68,38 @@
       (game-runner {:uuid uuid :size 3 :board []} updated-players)
       (recur updated-players uuid))))
 
-(defn spectate []
-  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue))
+(defn- get-ongoing-game []
+  (let [moves (queue/get-messages queue/watching-queue false)]
+   (println moves)
+    (if (empty? moves)
+      (println "EMPTY")
+      (for [move moves]
+        (println move)))))
+
+(defn no-games []
+  (output/print-message (output/no-games))
+  (Thread/sleep 2000)
+  (start))
+
+(defn one-game [games]
+  (notifications/subscribe-to-game (get games 0))
+  (get-ongoing-game))
+
+(defn multiple-games [games]
+  (output/print-message (output/number-of-games games))
+  (let [choice (input/get-number (range selection-1 (inc (count games))))]
+    (notifications/subscribe-to-game (get games (dec choice)))
+    (get-ongoing-game)))
+
+(defn- spectate []
+  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue false))
         number-of-games (spectator/count-games games)]
-    (println number-of-games)
+    (println games)
     (cond
-      (= 0 number-of-games) (do (output/print-message (output/no-games)) (Thread/sleep 2000) (start))
-      (= 1 number-of-games) (notifications/subscribe-to-game (get games 0) )
+      (= 0 number-of-games) (no-games)
+      (= 1 number-of-games) (one-game games)
       :else
-      ((output/print-message (output/number-of-games games))
-       (let [choice (input/get-number (range 1 (inc (count games))))
-             game (get games (dec choice))]
-         (println game)
-         (println  (notifications/subscribe-to-game game))
-         )))))
+      (multiple-games games))))
 
 (defn play []
   (let [uuid (queue/create-uuid)]

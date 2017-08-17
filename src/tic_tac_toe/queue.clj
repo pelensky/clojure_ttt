@@ -10,12 +10,12 @@
 (defn send-uuid-to-queue [uuid]
   (aws/send-message games-queue uuid))
 
-(defn get-messages [queue]
+(defn get-messages [queue delete?]
   (get
     (aws/receive-message :queue-url queue
                          :wait-time-seconds 6
                          :max-number-of-messages 10
-                         :delete false
+                         :delete delete?
                          :attribute-names ["All"])  :messages))
 
 (defn get-game-ids [messages]
