@@ -73,18 +73,15 @@
   (let [games (queue/get-messages queue/watching-queue true)
         moves (queue/get-game-states games)]
     (doall  (for [move moves]
-      (output/print-message (output/format-board (read-string  move)))))
+              (output/print-message (output/format-board (read-string  move)))))
     (recur) ))
 
-(defn multiple-games [games]
-  (dorun
-    (for [game games]
-      (notifications/subscribe-to-game game)))
-  (get-ongoing-game))
-
-(defn- spectate []
+(defn spectate []
   (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue false))]
-    (multiple-games games)))
+    (dorun
+      (for [game games]
+        (notifications/subscribe-to-game game))
+      (get-ongoing-game))))
 
 (defn play []
   (let [uuid (queue/create-uuid)]
