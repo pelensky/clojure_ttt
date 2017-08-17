@@ -9,12 +9,13 @@
   (str (java.util.UUID/randomUUID)))
 
 (defn create-subscriber-queue [id]
-  (create-queue :queue-name id
+  (aws/create-queue :queue-name id
                 :attributes
                 {:VisibilityTimeout 30 ; sec
                  :MaximumMessageSize 65536 ; bytes
                  :MessageRetentionPeriod 1209600 ; sec
                  :ReceiveMessageWaitTimeSeconds 10}) ; sec)
+)
 
   (defn send-uuid-to-queue [uuid]
     (println (aws/list-queues))
