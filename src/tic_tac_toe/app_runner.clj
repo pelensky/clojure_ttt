@@ -77,16 +77,12 @@
     (recur) ))
 
 (defn spectate []
-  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue false))]
-    (dorun
-      (for [game games]
-        (notifications/subscribe-to-game game))
-      (get-ongoing-game))))
+  (dorun
+    (notifications/subscribe-to-games))
+  (get-ongoing-game) )
 
 (defn play []
   (let [uuid (queue/create-uuid)]
-    (queue/send-uuid-to-queue uuid)
-    (notifications/create-game uuid)
     (select-players [] uuid)))
 
 (defn select-player-or-spectator []

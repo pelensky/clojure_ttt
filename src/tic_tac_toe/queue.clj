@@ -8,22 +8,30 @@
 (defn create-uuid []
   (str (java.util.UUID/randomUUID)))
 
-(defn send-uuid-to-queue [uuid]
-  (println (aws/list-queues))
-  (aws/send-message games-queue uuid))
+(defn create-subscriber-queue [id]
+  (create-queue :queue-name id
+                :attributes
+                {:VisibilityTimeout 30 ; sec
+                 :MaximumMessageSize 65536 ; bytes
+                 :MessageRetentionPeriod 1209600 ; sec
+                 :ReceiveMessageWaitTimeSeconds 10}) ; sec)
 
-(defn get-messages [queue delete?]
-  (get
-    (aws/receive-message :queue-url queue
-                         :wait-time-seconds 6
-                         :max-number-of-messages 10
-                         :delete delete?
-                         :attribute-names ["All"])  :messages))
+  (defn send-uuid-to-queue [uuid]
+    (println (aws/list-queues))
+    (aws/send-message games-queue uuid))
 
-(defn get-game-states [messages]
-  (let [bodies (vec (set (map #(get % :body)  messages)))
-        json-bodies (map #(json/read-str %) bodies)]
+  (defn get-messages [queue delete?]
+    (get
+      (aws/receive-message :queue-url queue
+                           :wait-time-seconds 6
+                           :max-number-of-messages 10
+                           :delete delete?
+                           :attribute-names ["All"])  :messages))
+
+  (defn get-game-states [messages]
+    (let [bodies (vec (set (map #(get % :body)  messages)))
+          json-bodies (map #(json/read-str %) bodies)]
       (vec (map #(get % "Message") json-bodies))))
 
-(defn get-game-ids [messages]
-  (vec (set (map #(get % :body) messages))))
+  (defn get-game-ids [messages]
+    (vec (set (map #(get % :body) messages))))
