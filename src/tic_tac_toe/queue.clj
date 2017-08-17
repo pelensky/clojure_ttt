@@ -22,7 +22,7 @@
 (defn get-game-states [messages]
   (let [bodies (vec (set (map #(get % :body)  messages)))
         json-bodies (map #(json/read-str %) bodies)]
-      (vec (map #(get % "Message") json-bodies)) ))
+      (vec (map #(get % "Message") json-bodies))))
 
 (defn get-game-ids [messages]
   (vec (set (map #(get % :body) messages))))
