@@ -2,7 +2,6 @@
   (require [amazonica.aws.sqs :as aws]
            [clojure.data.json :as json]))
 
-(def games-queue (aws/find-queue "InProgressGames"))
 (def watching-queue (aws/find-queue "WatchingGame"))
 
 (defn create-uuid []
@@ -17,10 +16,6 @@
                  :ReceiveMessageWaitTimeSeconds 10}) ; sec)
 )
 
-  (defn send-uuid-to-queue [uuid]
-    (println (aws/list-queues))
-    (aws/send-message games-queue uuid))
-
   (defn get-messages [queue delete?]
     (get
       (aws/receive-message :queue-url queue
@@ -33,6 +28,3 @@
     (let [bodies (vec (set (map #(get % :body)  messages)))
           json-bodies (map #(json/read-str %) bodies)]
       (vec (map #(get % "Message") json-bodies))))
-
-  (defn get-game-ids [messages]
-    (vec (set (map #(get % :body) messages))))
