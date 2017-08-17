@@ -3,6 +3,14 @@
             [tic-tac-toe.output :refer :all]))
 
 (describe "Output"
+          (it "Asks if the user is a player or spectator"
+              (should-contain "Select your role\n1) Player\n2) Spectator"
+                (with-out-str (print-message (player-or-spectator)))))
+
+          (it "Prints the number of games"
+              (should-contain "There are 3 games in progress.\nSelect a game from 1 to 3"
+                              (with-out-str (print-message (number-of-games [1 2 3])))))
+
           (it "Welcomes user"
               (should-contain "Tic Tac Toe"
                               (with-out-str (print-message (welcome)))))

@@ -2,4 +2,4 @@
   (:require [tic-tac-toe.app-runner :as ttt-app-runner]))
 
 (defn -main [& args]
-  (ttt-app-runner/play))
+  (ttt-app-runner/start))

@@ -5,29 +5,32 @@
             [tic-tac-toe.random-computer :as random-computer]
             [tic-tac-toe.input :as input]
             [tic-tac-toe.output :as output]
+            [tic-tac-toe.spectator :as spectator]
+            [tic-tac-toe.queue :as queue]
+            [tic-tac-toe.notifications :as notifications]
             [clj-http.client :as client]))
 
-(def play-again-selection 1)
-
+(def selection-1 1)
 (def player-x 0)
-
 (def player-o 1)
-
 (def max-players 2)
+(def two [1 2])
+(def three [1 2 3])
 
-(declare play)
+(declare start)
 
 (defn play-again [selection]
-  (if (= selection play-again-selection)
-    (play)
+  (if (= selection selection-1)
+    (start)
     (output/print-message (output/exiting))))
 
 (defn end-of-game [board-state]
+  (notifications/send-move board-state)
   (output/clear-screen)
   (output/print-message (output/game-over board-state))
   (output/print-message (output/format-board board-state))
   (output/print-message (output/play-again))
-  (play-again (input/get-number)))
+  (play-again (input/get-number two)))
 
 (defn current-player [board-state players]
   (let [board (ttt-board/get-board board-state)]
@@ -46,8 +49,9 @@
     :unbeatable-computer (api-call board-state)))
 
 (defn single-turn [board-state players]
+  (notifications/send-move board-state)
   (let [player (current-player board-state players)]
-      (ttt-board/place-marker (player-move board-state player) board-state)))
+    (ttt-board/place-marker (player-move board-state player) board-state)))
 
 (defn game-runner [board-state players]
   (output/clear-screen)
@@ -58,15 +62,44 @@
       (end-of-game updated-board)
       (recur updated-board players))))
 
-(defn select-players [players]
-  (output/clear-screen)
+(defn select-players [players uuid]
   (output/print-message (output/player-type (if (empty? players) "X" "O")))
-  (let [updated-players (player-type/select-players players (player-type/select-player (input/get-number)))]
+  (let [updated-players (player-type/select-players players (player-type/select-player (input/get-number three)))]
     (if (= max-players (count updated-players ))
-      (game-runner {:size 3 :board []} updated-players)
-      (recur updated-players))))
+      (game-runner {:uuid uuid :size 3 :board []} updated-players)
+      (recur updated-players uuid))))
+
+(defn- get-ongoing-game []
+  (let [games (queue/get-messages queue/watching-queue true)
+        moves (queue/get-game-states games)]
+    (doall  (for [move moves]
+      (output/print-message (output/format-board (read-string  move)))))
+    (recur) ))
+
+(defn multiple-games [games]
+  (dorun
+    (for [game games]
+      (notifications/subscribe-to-game game)))
+  (get-ongoing-game))
+
+(defn- spectate []
+  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue false))]
+    (multiple-games games)))
 
 (defn play []
+  (let [uuid (queue/create-uuid)]
+    (queue/send-uuid-to-queue uuid)
+    (notifications/create-game uuid)
+    (select-players [] uuid)))
+
+(defn select-player-or-spectator []
+  (output/print-message (output/player-or-spectator))
+  (let [choice (input/get-number two)]
+    (if (= selection-1 choice)
+      (play)
+      (spectate))))
+
+(defn start []
   (output/clear-screen)
   (output/print-message (output/welcome))
-  (select-players []))
+  (select-player-or-spectator))
