@@ -72,13 +72,12 @@
 (defn- get-ongoing-game []
   (let [games (queue/get-messages queue/watching-queue true)
         moves (queue/get-game-states games)]
-    (println moves)
     (doall  (for [move moves]
       (output/print-message (output/format-board (read-string  move)))))
     (recur) ))
 
 (defn multiple-games [games]
-  (println
+  (dorun
     (for [game games]
       (notifications/subscribe-to-game game)))
   (get-ongoing-game))
