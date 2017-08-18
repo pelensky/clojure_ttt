@@ -3,12 +3,14 @@
 
 This is a simple Tic Tac Toe game built in Clojure.
 
+A user can choose to be a player or a spectator of a game.
+
 There are three types of players, and a game can be played by any combination of them:
 1. Human
 2. Simple Computer
 3. Expert Computer
 
-The unbeatable computer
+The expert computer
 player uses [the API I built using an AWS
 Lambda](https://github.com/pelensky/ttt_network_player).
 
@@ -23,7 +25,10 @@ Lambda](https://github.com/pelensky/ttt_network_player).
 2. Select Download Zip
 3. Double click the zip file to unzip it
 4. In terminal, CD into the repository
-5. Run the app with `$ lein run`
+5. Create an [AWS account](https://aws.amazon.com/) 
+6. Set the following Environment Variables. I use
+   [EnvPane](https://github.com/hschmidt/EnvPane). `AWS_ACCOUNT_ID`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_KEY`.
+7. Run the app with `$ lein run`
 
 #### The Rules
 
