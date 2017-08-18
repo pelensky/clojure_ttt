@@ -11,7 +11,6 @@
           [com.amazonaws.auth.policy.actions SQSActions]
           [com.amazonaws.auth.policy.conditions ConditionFactory]))
 
-(def watching-queue (sqs/find-queue "WatchingGame"))
 (defn queue-url [id]
   (str "https://sqs.eu-west-1.amazonaws.com/549374948510/" id))
 (defn queue-arn [id]
