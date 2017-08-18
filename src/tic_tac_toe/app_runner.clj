@@ -94,6 +94,7 @@
       (spectate))))
 
 (defn start []
-  (output/clear-screen)
+  (queue/set-queue-permission)
+;  (output/clear-screen)
   (output/print-message (output/welcome))
   (select-player-or-spectator))
