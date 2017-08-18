@@ -42,16 +42,16 @@
                                 (with-out-str (with-in-str "1\n1\n1\na1\nc1\nb2\nc2\na3\nc3\n2"
                                                 (start))))))
 
+          (it "plays until the game is over when two computers play each other"
+              (with-redefs [notifications/send-move (stub :send-move)]
+                (should-contain "Game Over"
+                                (with-out-str (with-in-str "1\n2\n2\n2"
+                                                (start))))))
+
           (it "finds the current player type"
               (should= :human
                        (current-player {:size 3 :board []} [:human :computer])))
 
           (it "finds a computer player"
               (should= :computer
-                       (current-player {:size 3 :board [1]} [:human :computer])))
-
-          (it "plays until the game is over when two computers play each other"
-              (with-redefs [notifications/send-move (stub :send-move)]
-                (should-contain "Game Over"
-                                (with-out-str (with-in-str "1\n2\n2\n2"
-                                                (start)))))))
+                       (current-player {:size 3 :board [1]} [:human :computer]))))
