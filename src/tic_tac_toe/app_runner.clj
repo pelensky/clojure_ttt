@@ -69,19 +69,19 @@
       (game-runner {:uuid uuid :size 3 :board []} updated-players)
       (recur updated-players uuid))))
 
-(defn- get-ongoing-game []
-  (let [games (queue/get-messages queue/watching-queue)
+(defn- get-ongoing-game [spectator-id]
+  (let [games (queue/get-messages spectator-id)
         moves (queue/get-game-states games)]
     (doall  (for [move moves]
               (output/print-message (output/format-board (read-string  move)))))
-    (recur) ))
+    (recur spectator-id)))
 
 (defn spectate []
   (let [spectator-id (queue/create-uuid)]
     (queue/create-subscriber-queue spectator-id)
     (queue/set-queue-permission spectator-id)
     (dorun (notifications/subscribe-to-games spectator-id))
-    (get-ongoing-game)) )
+    (get-ongoing-game spectator-id)) )
 
 (defn play []
   (let [game-uuid (queue/create-uuid)]
