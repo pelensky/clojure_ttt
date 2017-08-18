@@ -3,20 +3,17 @@
 
 (def region (get (System/getenv) "AWS_REGION"))
 (def account-number (get (System/getenv) "AWS_ACCOUNT_ID"))
-
-(defn create-game [id]
-  (create-topic :name id))
+(def topic "tic-tac-toe")
 
 (defn send-move [board-state]
-  (let [id (get board-state :uuid)
-        arn (str "arn:aws:sns:" region ":" account-number ":" id)]
+  (let [arn (str "arn:aws:sns:" region ":" account-number ":" topic)]
     (publish :topic-arn arn
-             :subject id
+             :subject topic
              :message (str board-state)
              :message-attributes {"attr" "value"})))
 
-(defn subscribe-to-game [id]
-  (let [arn (str "arn:aws:sns:" region ":" account-number ":")]
+(defn subscribe-to-games [id]
+  (let [arn (str "arn:aws:sns:" region ":" account-number ":" topic)]
     (subscribe :protocol "sqs"
-               :topic-arn (str arn id)
-               :endpoint (str "arn:aws:sqs:" region ":" account-number ":WatchingGame"))))
+               :topic-arn arn
+               :endpoint (str "arn:aws:sqs:" region ":" account-number ":" id))))

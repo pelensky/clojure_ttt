@@ -69,28 +69,23 @@
       (game-runner {:uuid uuid :size 3 :board []} updated-players)
       (recur updated-players uuid))))
 
-(defn- get-ongoing-game []
-  (let [games (queue/get-messages queue/watching-queue true)
-        moves (queue/get-game-states games)]
+(defn- get-ongoing-game [spectator-id]
+  (let [games (queue/get-games spectator-id)
+        moves (queue/get-moves games)]
     (doall  (for [move moves]
-      (output/print-message (output/format-board (read-string  move)))))
-    (recur) ))
+              (output/print-message (output/format-board (read-string  move)))))
+    (recur spectator-id)))
 
-(defn multiple-games [games]
-  (dorun
-    (for [game games]
-      (notifications/subscribe-to-game game)))
-  (get-ongoing-game))
-
-(defn- spectate []
-  (let [games (queue/get-game-ids ( queue/get-messages queue/games-queue false))]
-    (multiple-games games)))
+(defn spectate []
+  (let [spectator-id (queue/create-uuid)]
+    (queue/create-subscriber-queue spectator-id)
+    (queue/set-queue-permission spectator-id)
+    (dorun (notifications/subscribe-to-games spectator-id))
+    (get-ongoing-game spectator-id)) )
 
 (defn play []
-  (let [uuid (queue/create-uuid)]
-    (queue/send-uuid-to-queue uuid)
-    (notifications/create-game uuid)
-    (select-players [] uuid)))
+  (let [game-uuid (queue/create-uuid)]
+    (select-players [] game-uuid)))
 
 (defn select-player-or-spectator []
   (output/print-message (output/player-or-spectator))
