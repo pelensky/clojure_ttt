@@ -12,8 +12,8 @@
              :message (str board-state)
              :message-attributes {"attr" "value"})))
 
-(defn subscribe-to-games []
+(defn subscribe-to-games [id]
   (let [arn (str "arn:aws:sns:" region ":" account-number ":" topic)]
     (subscribe :protocol "sqs"
                :topic-arn arn
-               :endpoint (str "arn:aws:sqs:" region ":" account-number ":WatchingGame"))))
+               :endpoint (str "arn:aws:sqs:" region ":" account-number ":" id))))

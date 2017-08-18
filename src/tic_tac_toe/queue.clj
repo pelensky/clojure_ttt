@@ -26,7 +26,7 @@
        (.setActions [SQSActions/SendMessage]))]))
 
 (defn set-queue-permission [id]
-  (sqs/set-queue-attributes (queue-url id) {"Policy" (.toJson policy)}))
+  (sqs/set-queue-attributes (queue-url id) {"Policy" (.toJson (policy id))}))
 
 (defn create-uuid []
   (str (java.util.UUID/randomUUID)))

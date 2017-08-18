@@ -80,7 +80,7 @@
   (let [spectator-id (queue/create-uuid)]
   (queue/create-subscriber-queue spectator-id)
   (queue/set-queue-permission spectator-id)
-  (dorun (notifications/subscribe-to-games))
+  (dorun (notifications/subscribe-to-games spectator-id))
   (get-ongoing-game)) )
 
 (defn play []
