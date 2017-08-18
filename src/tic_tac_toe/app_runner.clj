@@ -70,8 +70,8 @@
       (recur updated-players uuid))))
 
 (defn- get-ongoing-game [spectator-id]
-  (let [games (queue/get-messages spectator-id)
-        moves (queue/get-game-states games)]
+  (let [games (queue/get-games spectator-id)
+        moves (queue/get-moves games)]
     (doall  (for [move moves]
               (output/print-message (output/format-board (read-string  move)))))
     (recur spectator-id)))
