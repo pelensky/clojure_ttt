@@ -1,14 +1,14 @@
 (ns tic-tac-toe.queue
-  (require [amazonica.aws.sqs :as aws]
+  (require [amazonica.aws.sqs :as sqs]
            [clojure.data.json :as json]))
 
-(def watching-queue (aws/find-queue "WatchingGame"))
+(def watching-queue (sqs/find-queue "WatchingGame"))
 
 (defn create-uuid []
   (str (java.util.UUID/randomUUID)))
 
 (defn create-subscriber-queue [id]
-  (aws/create-queue :queue-name id
+  (sqs/create-queue :queue-name id
                 :attributes
                 {:VisibilityTimeout 30 ; sec
                  :MaximumMessageSize 65536 ; bytes
@@ -18,7 +18,7 @@
 
   (defn get-messages [queue]
     (get
-      (aws/receive-message :queue-url queue
+      (sqs/receive-message :queue-url queue
                            :wait-time-seconds 6
                            :max-number-of-messages 10
                            :delete true
