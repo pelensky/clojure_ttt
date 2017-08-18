@@ -79,6 +79,7 @@
 (defn spectate []
   (let [spectator-id (queue/create-uuid)]
   (queue/create-subscriber-queue spectator-id)
+  (queue/set-queue-permission spectator-id)
   (dorun (notifications/subscribe-to-games))
   (get-ongoing-game)) )
 
@@ -94,7 +95,6 @@
       (spectate))))
 
 (defn start []
-  (queue/set-queue-permission)
-;  (output/clear-screen)
+  (output/clear-screen)
   (output/print-message (output/welcome))
   (select-player-or-spectator))

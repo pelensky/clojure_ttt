@@ -12,18 +12,21 @@
           [com.amazonaws.auth.policy.conditions ConditionFactory]))
 
 (def watching-queue (sqs/find-queue "WatchingGame"))
-(def queue-url "https://sqs.eu-west-1.amazonaws.com/549374948510/WatchingGame" )
-(def queue-arn (-> queue-url sqs/get-queue-attributes :QueueArn))
+(defn queue-url [id]
+  (str "https://sqs.eu-west-1.amazonaws.com/549374948510/" id))
+(defn queue-arn [id]
+  (-> (queue-url id) sqs/get-queue-attributes :QueueArn))
 (def topic-arn "arn:aws:sns:eu-west-1:549374948510:tic-tac-toe")
-(def policy (Policy.
-                      (str queue-arn "/SQSDefaultPolicy")
-                         [(doto (Statement. Statement$Effect/Allow)
-                            (.setPrincipals [Principal/AllUsers])
-                            (.setResources [(Resource. queue-arn)])
-                            (.setActions [SQSActions/SendMessage]))]))
+(defn policy [id]
+  (Policy.
+    (str (queue-arn id) "/SQSDefaultPolicy")
+    [(doto (Statement. Statement$Effect/Allow)
+       (.setPrincipals [Principal/AllUsers])
+       (.setResources [(Resource. (queue-arn id))])
+       (.setActions [SQSActions/SendMessage]))]))
 
-(defn set-queue-permission []
-  (sqs/set-queue-attributes queue-url {"Policy" (.toJson policy)}))
+(defn set-queue-permission [id]
+  (sqs/set-queue-attributes (queue-url id) {"Policy" (.toJson policy)}))
 
 (defn create-uuid []
   (str (java.util.UUID/randomUUID)))
