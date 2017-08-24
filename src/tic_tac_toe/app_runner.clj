@@ -8,7 +8,8 @@
             [tic-tac-toe.spectator :as spectator]
             [tic-tac-toe.queue :as queue]
             [tic-tac-toe.notifications :as notifications]
-            [clj-http.client :as client]))
+            [clj-http.client :as client]
+            [clojure.data.json :as json]))
 
 (def selection-1 1)
 (def player-x 0)
@@ -39,7 +40,7 @@
       (get players player-o))))
 
 (defn- api-call [board-state]
-  (let [result (client/post "https://xast1bug7h.execute-api.us-east-1.amazonaws.com/ttt" {:form-params {"boardState" (str board-state)} :content-type :json} )]
+  (let [result (client/post "https://409p3i89w7.execute-api.eu-west-1.amazonaws.com/ttt" {:form-params board-state :content-type :json} )]
     (read-string (get result :body))))
 
 (defn- player-move [board-state player]
@@ -73,7 +74,7 @@
   (let [games (queue/get-games spectator-id)
         moves (queue/get-moves games)]
     (doall  (for [move moves]
-              (output/print-message (output/format-board (read-string  move)))))
+     (output/print-message (output/format-board (json/read-str move :key-fn keyword)))))
     (recur spectator-id)))
 
 (defn spectate []

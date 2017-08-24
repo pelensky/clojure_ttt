@@ -1,4 +1,5 @@
 (ns tic-tac-toe.notifications
+  (require [clojure.data.json :as json])
   (:use [amazonica.aws.sns]))
 
 (def region (get (System/getenv) "AWS_REGION"))
@@ -9,7 +10,7 @@
   (let [arn (str "arn:aws:sns:" region ":" account-number ":" topic)]
     (publish :topic-arn arn
              :subject topic
-             :message (str board-state)
+             :message (json/write-str board-state)
              :message-attributes {"attr" "value"})))
 
 (defn subscribe-to-games [id]

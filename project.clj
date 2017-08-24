@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :main tic-tac-toe.core
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [speclj "3.3.2"]
                  [clj-http "3.6.1"]
                  [cheshire "5.7.1"]
                  [clj-time "0.14.0"]
