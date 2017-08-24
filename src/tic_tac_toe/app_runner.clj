@@ -40,7 +40,7 @@
       (get players player-o))))
 
 (defn- api-call [board-state]
-  (let [result (client/post "https://xast1bug7h.execute-api.us-east-1.amazonaws.com/ttt" {:form-params {"boardState" (str board-state)} :content-type :json} )]
+  (let [result (client/post "https://409p3i89w7.execute-api.eu-west-1.amazonaws.com/ttt" {:form-params board-state :content-type :json} )]
     (read-string (get result :body))))
 
 (defn- player-move [board-state player]
