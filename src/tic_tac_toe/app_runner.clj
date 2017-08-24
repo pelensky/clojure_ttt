@@ -8,7 +8,8 @@
             [tic-tac-toe.spectator :as spectator]
             [tic-tac-toe.queue :as queue]
             [tic-tac-toe.notifications :as notifications]
-            [clj-http.client :as client]))
+            [clj-http.client :as client]
+            [clojure.data.json :as json]))
 
 (def selection-1 1)
 (def player-x 0)
@@ -73,7 +74,7 @@
   (let [games (queue/get-games spectator-id)
         moves (queue/get-moves games)]
     (doall  (for [move moves]
-              (output/print-message (output/format-board (read-string  move)))))
+     (output/print-message (output/format-board (json/read-str move :key-fn keyword)))))
     (recur spectator-id)))
 
 (defn spectate []
