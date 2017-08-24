@@ -7,7 +7,6 @@
 (def topic "tic-tac-toe")
 
 (defn send-move [board-state]
-  (println (json/write-str board-state))
   (let [arn (str "arn:aws:sns:" region ":" account-number ":" topic)]
     (publish :topic-arn arn
              :subject topic
